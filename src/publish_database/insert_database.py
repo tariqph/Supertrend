@@ -81,7 +81,7 @@ def trade_strategy(tradefile,tradefile_parser, parser, next, query_cursor, optio
     
     return
 
-def check_stoploss(tradefile_parser, next, tradefile):
+def check_stoploss(tradefile_parser, next, tradefile, next_timestamp):
     
     pe_token = tradefile_parser.get('trades','put_token')
     ce_token = tradefile_parser.get('trades','call_token')
@@ -114,13 +114,15 @@ def check_stoploss(tradefile_parser, next, tradefile):
             place_order([ce_symbol],strike,['buy'],tradefile)
     
     if(weekday >=1 and weekday <= 3):
-        if((banknifty_ltp - strike) > 200):
-            print("buy call")
-            place_order([ce_symbol],strike,['buy'],tradefile)
-               
-        if((strike - banknifty_ltp) > 200):
-            print("buy put")
-            place_order([pe_symbol],strike,['buy'],tradefile)
+        if(next_timestamp.minute % 5 == 0):
+            if(next_timestamp.second == 0):
+                if((banknifty_ltp - strike) > 200):
+                    print("buy call")
+                    place_order([ce_symbol],strike,['buy'],tradefile)
+                    
+                if((strike - banknifty_ltp) > 200):
+                    print("buy put")
+                    place_order([pe_symbol],strike,['buy'],tradefile)
             
         print("strategy")
     
@@ -308,7 +310,7 @@ def insert_db(ticks, tablename, filename_data,
     
     if(tradefile_parser.get('trades','position') == 'yes'):
         
-        check_stoploss(tradefile_parser, next, tradefile)
+        check_stoploss(tradefile_parser, next, tradefile, next_timestamp)
             
     
     if(next_timestamp.hour == 9 and next_timestamp.minute == 25 and next_timestamp.second == 0):
