@@ -96,18 +96,5 @@ if __name__ == "__main__":
 
 	columns = ['instrument_token','Datetime','Close','High','Low','row_number']
 	data = pd.DataFrame(data, columns = columns)
-	# print(data.head())
-	# symbol = 'AAPL'
-	# df = yf.download(symbol, start='2021-12-01')
-	# print(df.head())
-	# supertrend = Supertrend(data, atr_period, atr_multiplier)
-	# supertrend = Supertrend(df, atr_period, atr_multiplier)
-	# print(data)
-	# print(data['Close'])
-	# sti = ta.supertrend(data['High'], data['Low'], data['Close'], 10, 1)
-	# print(sti)
-	# print(supertrend)
-	# data = data.join(supertrend)
-	# data = df.join(supertrend)
+	
 
-	# data.to_csv('test.csv')

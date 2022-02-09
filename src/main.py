@@ -6,9 +6,28 @@ import logging
 import datetime 
 import yaml
 import time
-
+import os, sys
+fpath = os.path.abspath(os.path.join(os.path.dirname(__file__),"access_config"))
+sys.path.append(fpath)
+import psycopg2
+from config import config
+import pandas as pd 
 # Reading config from yaml file
 
+def database_cleanup():
+    logging.info("Cleaning the database with older data")
+    
+    params = config()
+    connection = psycopg2.connect(**params)
+    connection.autocommit = True
+
+    cursor = connection.cursor()
+    date_time_now = datetime.datetime.now()
+    date_time_del = date_time_now - datetime.timedelta(days=4)
+    date_time_del = date_time_del.strftime("%Y-%m-%d %H:%M:%S")
+    query = f"DELETE FROM banknifty_option_data where date_time <= \'{(date_time_del)}\'"
+    cursor.execute(query)
+    
 def gen_tokens():
     
 # Generating Access Tokens
@@ -91,6 +110,7 @@ def celery_websocket():
                     new_thread.start()
                     threads[i] = new_thread
                     logging.info('Thread restarted')
+                    
         if(time_now.hour == 15 and time_now.minute == 30):
             logging.info('Run over')
             break
@@ -107,7 +127,7 @@ if __name__ == "__main__":
     logging.info('Today date is %s',date)
     logging.info('Started run at %s',time_now)
     
-    exec_date_file = "/home/narayana_tariq/Zerodha/Supertrend_strat/last_execution_date.txt"
+    exec_date_file = "/home/narayana_tariq/Zerodha/Supertrend/last_execution_date.txt"
 
     print(date)
     with open(exec_date_file, 'a+') as infile:
@@ -123,7 +143,8 @@ if __name__ == "__main__":
        
     
     if(a == ''):
-    
+        database_cleanup()
+        
         gen_tokens()
         celery_websocket()
         
