@@ -26,7 +26,6 @@ exit_time_filename = os.path.abspath(os.path.join(os.path.dirname(__file__),".."
                                  "..","exit_time.txt"))
 
 date_today = datetime.date.today()
-
 @app.route('/')
 def my_form():
 
@@ -46,6 +45,7 @@ def my_form():
 
 @app.route('/', methods=['POST'])
 def my_form_post():
+    
     print(request.form)
     # print(request.form['action'])
     # input_nopol = request.form['text_box']
@@ -58,8 +58,16 @@ def my_form_post():
         if 'time' in request.form:
             print('here nnn')
             print(request.form['time'])
-            with open(exit_time_filename, 'w') as f:
-                f.write(str(request.form['time']))
+            time_string = request.form['time']
+            timeformat = "%H:%M:%S"
+            try:
+                validtime = datetime.datetime.strptime(time_string, timeformat)
+                with open(exit_time_filename, 'w') as f:
+                        f.write(str(request.form['time']))
+                #Do your logic with validtime, which is a valid format
+            except ValueError:
+                pass
+                    
 
     kite = access_token(filename = filename,type = "kiteconnect")
     
@@ -78,4 +86,4 @@ def my_form_post():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run('0.0.0.0')
+    app.run('0.0.0.0',6901)
