@@ -44,14 +44,22 @@
       <br></br>
 
 
-      <!-- {% if exit != 'exit' %} -->
+      {% if exit != 'exit' %}
       <form action="" method="POST"
       onSubmit="return confirm('Are you sure you wish to exit all open positions?');">
         <!-- <input name="text_box"> -->
-        <input id="submit" type="submit" value="Exit all positions"
+        <input name = "action" id="submit" type="submit" value="Exit all positions"
         >
       </form>
       {% endif %}
+  <br></br>
+  <h3>Current Exit Time: {{ exit_time}}</h3>
+      <form action=""  method="POST"
+      onSubmit="return confirm('Are you sure you wish to change exit time?');">
+        <label for="appt">Change Exit Time:  </label>
+        <input type="time" id="appt" name="time" value = "appt" step = "1">
+        <input type="submit">
+      </form>
     </center>
    </body>
 </html>

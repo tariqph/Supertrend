@@ -24,6 +24,10 @@ def trade_strategy(tradefile,tradefile_parser, parser, next, query_cursor, optio
     put_token = tradefile_parser.get('trades','put_token')
     call_token = tradefile_parser.get('trades','call_token')
     
+    if(put_token == 'closed' and call_token == 'closed'):
+        return
+    
+    
     if(put_token == 'closed'):
         option_token = tradefile_parser.get('trades','call_token')
         option_symbol = tradefile_parser.get('trades','call_symbol')
@@ -182,7 +186,8 @@ def exit_position(tradefile_parser,tradefile):
         buy_sell.append("buy")
     strike = tradefile_parser.get('trades','strike')
     # print(option_symbols,strike, buy_sell)
-    place_order(option_symbols,strike,buy_sell,tradefile)
+    if(len(option_symbols) > 0):
+        place_order(option_symbols,strike,buy_sell,tradefile)
     
     
     return 
@@ -321,14 +326,33 @@ def insert_db(ticks, tablename, filename_data,
             place_straddle(options_symbols,strike, "entry",tradefile)
     
     # Exit all the active positions before 3 pm 
-    exit_time_string = "14:59:55"
-    exit_time = datetime.datetime.strptime(exit_time_string,"%H:%M:%S").time()    
+    exit_time_string_1 = "14:59:55"
+    exit_time_string_2 = "14:59:56"
+    exit_time_string_3 = "14:59:57"
     
-    if(next_timestamp.time() == exit_time):
+    exit_time_1 = datetime.datetime.strptime(exit_time_string_1,"%H:%M:%S").time()
+    exit_time_2 = datetime.datetime.strptime(exit_time_string_2,"%H:%M:%S").time()    
+    exit_time_3 = datetime.datetime.strptime(exit_time_string_3,"%H:%M:%S").time()    
+    
+        
+    
+    if(next_timestamp.time() == exit_time_1 
+       or next_timestamp.time() == exit_time_2
+       or next_timestamp.time() == exit_time_3):
         
         exit_position(tradefile_parser,tradefile)
-
-
+    
+    trade_exit_filename = os.path.abspath(os.path.join(os.path.dirname(__file__),"..",
+                                 "..","trade_exit.txt"))
+    
+    with open(trade_exit_filename, 'r') as file_reader:
+        file_reader.seek(0)
+        trade_exit = file_reader.readline()
+    
+    if(trade_exit == 'exit'):
+        exit_position(tradefile_parser,tradefile)
+        
+    
     if(next_timestamp.hour == 9 and next_timestamp.minute < 20):
         return
     
@@ -351,9 +375,10 @@ def insert_db(ticks, tablename, filename_data,
             # logging.info('here 1')
             
             # If only one leg of straddle is in position and time is before exit then check for supertrend
-            if(trade_count > 0 and position == 'no' and next_timestamp.time() < exit_time):
+            if(trade_count > 0 and position == 'no' and next_timestamp.time() < exit_time_1):
                 query_cursor = connection.cursor()
-                trade_strategy(tradefile,tradefile_parser, parser, next, query_cursor,options_data)
+                trade_strategy(tradefile,tradefile_parser, parser,
+                               next, query_cursor,options_data)
             
             for token,tick in next.items():
                 
