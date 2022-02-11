@@ -74,7 +74,8 @@ parser.read(filename_highlow)
     
 exec_date_filename = os.path.abspath(os.path.join(os.path.dirname(__file__),"..",
                                  "..","last_execution_date.txt"))
-
+trade_exit_filename = os.path.abspath(os.path.join(os.path.dirname(__file__),"..",
+                                 "..","trade_exit.txt"))
 # print(exec_date_filename)
 with open(exec_date_filename, 'a+') as infile:
 	try:
@@ -124,10 +125,13 @@ if(date != date_exec.date()):
 
     with open(filename_highlow, 'w') as configfile:
         parser.write(configfile)
+    
+    with open(trade_exit_filename, 'w') as f:
+            f.write(str('entry'))
 
     # Clear the previous ticks file
-        open(filename_data, 'w').close()
-        open(filename_timestamp, 'w').close()
+    open(filename_data, 'w').close()
+    open(filename_timestamp, 'w').close()
 
     # Update the file with execution date
     with open(exec_date_filename, 'w+') as infile:

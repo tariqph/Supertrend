@@ -70,23 +70,29 @@ def celery_websocket():
 
     worker = os.path.abspath(os.path.join(os.path.dirname(__file__), "publish_database"))
     ticker_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "ticker"))
+    flask_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "flask_app"))
+    
     
     queue_1 = config['rabbitmq']['queues']['banknifty']
     
     # Commands to run parallely
     lstCmd=['cd "' + worker + f'" && celery -A insert_database  worker -Q {queue_1} --concurrency=1  --loglevel=info -P  eventlet -n worker1@%h', 
-            'cd "' + ticker_path +'" && python banknifty_conn.py']   
+            'cd "' + ticker_path +'" && python banknifty_conn.py',
+            'cd "' + flask_path +'" && python app.py']   
 
     # Create new threads
     thread1 = myThread(lstCmd[0])
     thread2 = myThread(lstCmd[1])
+    thread3 = myThread(lstCmd[2])
+    
     
 
-    threads = [thread1,thread2]
+    threads = [thread1,thread2, thread3]
 
     # Start new Threads
     thread1.start()
     thread2.start()
+    thread3.start()
     
     while True:
         time.sleep(2)
