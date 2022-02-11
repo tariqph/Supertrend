@@ -1,5 +1,4 @@
 supertrend_evn/
-
 database_pettem.ini
 
 logs/
@@ -22,3 +21,4 @@ src/publish_database/db.sqlite3
 src/access_config/__pycache__
 
 test.csv
+temp_cache/
