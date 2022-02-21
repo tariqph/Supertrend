@@ -6,75 +6,12 @@ access_files:
   api_two: database_hemant.ini
   api_three: database_pettem.ini
 
-# Input File location
-input_files:
-  root_location: Data/Input
-  stock_list: Data/Input/stock_list.csv
-  index_currency_list: Data/Input/index_currency_list.csv
-  expiry_currency: Data/Input/expiry_curr.csv
-  expiry_index: Data/Input/expiry_index.csv
-  all_instruments: Data/Input/Data_Complete.csv
-  indexes: Data/Input/Indexes.csv
-
-# Input File location
-output_files:
-  root_location: Data\Output
-  # Output fules with geerated symbols
-  symbols:
-    stock_list_one: Data\Output\final_list_one.csv
-    stock_list_two: Data\Output\final_list_three.csv
-    monthly_currency: Data\Output\monthly_curr.csv
-    monthly_index: Data\Output\monthly_index.csv
-    weekly_currency: Data\Output\weekly_curr.csv
-    weekly_index: Data\Output\weekly_index.csv
-
-  # Output files with tokens after lookup of symbols from the complete list
-  tokens:
-    underlying_stocks: Data\Output\Final\final_token_stock_underlying.csv
-    currency_futures_tokens: Data\Output\Final\final_curr_futures_token.csv
-    index_futures_tokens: Data\Output\Final\final_index_futures_token.csv
-    currency_monthly_tokens: Data\Output\Final\final_token_curr_monthly.csv
-    currency_weekly_tokens: Data\Output\Final\final_token_curr_weekly.csv
-    index_monthly_tokens: Data\Output\Final\final_token_index_monthly.csv
-    index_weekly_tokens: Data\Output\Final\final_token_index_weekly.csv
-    BSE_indices_tokens: Data\Output\Final\final_token_indices_list_BSE.csv
-    NSE_indices_tokens: Data\Output\Final\final_token_indices_list_NSE.csv
-    stocks_one_month_tokens: Data\Output\Final\final_token_stock_one_month.csv
-    stocks_three_months_tokens: Data\Output\Final\final_token_stock_three_month.csv
-    final_underlying_tokens: Data\Output\Final\final_token_stock_underlying.csv
-  
-  merged_tokens:
-    all_instruments: Data\Output\Final_all_instruments_today.csv
-    all_currencies: Data\Output\all_tokens_curr.csv
-    all_instruments_ex_currencies: Data\Output\all_tokens_ex_curr.csv
 
 # Location of the cache files for ticks data
 cache_files:
   prev_timestamp_1: temp_cache/prev_timestamp_1.txt
-  prev_timestamp_2: temp_cache\prev_timestamp_2.txt
-  prev_timestamp_3: temp_cache\prev_timestamp_3txt
-  prev_timestamp_4: temp_cache\prev_timestamp_4.txt
-  prev_timestamp_5: temp_cache\prev_timestamp_5.txt
-  prev_timestamp_6: temp_cache\prev_timestamp_6.txt
   prev_1: temp_cache/prev_1.txt
-  prev_2: temp_cache\prev_2.txt
-  prev_3: temp_cache\prev_3.txt
-  prev_4: temp_cache\prev_4.txt
-  prev_5: temp_cache\prev_5.txt
-  prev_6: temp_cache\prev_6.txt
-
-# Google cloud key location and config
-gcloud:
-  pubsub_key: gcloud\key.json
-  pubsub_key_new: gcloud\key_new_acc.json
-  bigquery_key: gcloud\key_bigquery.json
-  project_name: zerodha-332309
-  dataset_id: ticker_data
-  pubsub_topic: ticker_data_new
-  pubsub_batch_settings:
-    max_messages: 1000  # default 100
-    max_bytes: 100000  # default 1 MiB
-    max_latency: 2 # default 10 ms
+ 
 
 # Rabbitmq config details
 rabbitmq:
@@ -83,21 +20,12 @@ rabbitmq:
   host: localhost
   port: 5672
   queues:
-    one: conn_7
-    two: conn_2
-    three: conn_3
-    four: conn_4
-    five: conn_5
-    six: conn_6
     banknifty: banknifty
 
 
 zerodha:
   kite_trade_url: "https://kite.trade/connect/login?api_key="
 
-email:
-  sender: johnadamsrealno1@gmail.com
-  reciever: tariqanwarph@gmail.com
 
 start_connection:
   currency:
