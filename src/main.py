@@ -14,7 +14,7 @@ from config import config
 import pandas as pd 
 # Reading config from yaml file
 
-def database_cleanup():
+def database_cleanup(tablename):
     logging.info("Cleaning the database with older data")
     
     params = config()
@@ -25,7 +25,7 @@ def database_cleanup():
     date_time_now = datetime.datetime.now()
     date_time_del = date_time_now - datetime.timedelta(days=4)
     date_time_del = date_time_del.strftime("%Y-%m-%d %H:%M:%S")
-    query = f"DELETE FROM banknifty_option_data where date_time <= \'{(date_time_del)}\'"
+    query = f"DELETE FROM {tablename} where date_time <= \'{(date_time_del)}\'"
     cursor.execute(query)
     
 def gen_tokens():
@@ -124,7 +124,7 @@ def celery_websocket():
 
 if __name__ == "__main__":
     
-
+    tablename = 'banknifty_option_data'
     date = datetime.date.today()
     log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..",f"logs/run_{date}.log"))
     logging.basicConfig(filename=log_file, level=logging.INFO)
@@ -133,7 +133,8 @@ if __name__ == "__main__":
     logging.info('Today date is %s',date)
     logging.info('Started run at %s',time_now)
     
-    exec_date_file = "/home/narayana_tariq/Zerodha/Supertrend/last_execution_date.txt"
+    # exec_date_file = "/home/narayana_tariq/Zerodha/Supertrend/last_execution_date.txt"
+    exec_date_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","last_execution_date.txt"))
 
     print(date)
     with open(exec_date_file, 'a+') as infile:
@@ -149,8 +150,7 @@ if __name__ == "__main__":
        
     
     if(a == ''):
-        database_cleanup()
-        
+        database_cleanup(tablename)
         gen_tokens()
         celery_websocket()
         
@@ -161,6 +161,7 @@ if __name__ == "__main__":
             celery_websocket()
 
         else:
+            database_cleanup(tablename)
             gen_tokens()
             celery_websocket()
     

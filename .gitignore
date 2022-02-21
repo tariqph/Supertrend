@@ -20,5 +20,8 @@ src/publish_database/db.sqlite3
 
 src/access_config/__pycache__
 
+src/trades/strategy.py
+
 test.csv
 temp_cache/
+high_low.ini

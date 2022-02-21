@@ -7,6 +7,17 @@ fpath = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","access_con
 sys.path.append(fpath)
 from access_token import access_token
 from configparser import ConfigParser
+import yaml
+
+config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..","config.yml"))
+try: 
+    with open (config_path, 'r') as file:
+        config = yaml.safe_load(file)
+except Exception as e:
+    print('Error reading the config file')
+
+
+lot_size = 1
 
 def place_order(symbols, strike, buy_sell, tradefile):
     
@@ -15,7 +26,9 @@ def place_order(symbols, strike, buy_sell, tradefile):
     tradefile_parser = ConfigParser()
     tradefile_parser.read(tradefile)
     
-    filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..","database_pettem.ini"))
+    filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..",
+                                            config['access_files']['api_three']))
+
 
     kite = access_token(filename = filename, type= 'kiteconnect')
     
@@ -25,7 +38,7 @@ def place_order(symbols, strike, buy_sell, tradefile):
                                         # price = 1,
                                             exchange=kite.EXCHANGE_NFO,
                                             transaction_type=kite.TRANSACTION_TYPE_SELL,
-                                            quantity=25,
+                                            quantity=lot_size * 25,
                                             variety=kite.VARIETY_REGULAR,
                                             order_type=kite.ORDER_TYPE_MARKET,
                                             product=kite.PRODUCT_NRML)
@@ -34,7 +47,7 @@ def place_order(symbols, strike, buy_sell, tradefile):
                                         # price = 1,
                                             exchange=kite.EXCHANGE_NFO,
                                             transaction_type=kite.TRANSACTION_TYPE_BUY,
-                                            quantity=25,
+                                            quantity=lot_size * 25,
                                             variety=kite.VARIETY_REGULAR,
                                             order_type=kite.ORDER_TYPE_MARKET,
                                             product=kite.PRODUCT_NRML)
@@ -95,8 +108,8 @@ def place_order(symbols, strike, buy_sell, tradefile):
 
 
 if __name__ == "__main__":
-    symbols = ['BANKNIFTY2221038600PE','BANKNIFTY2221038600CE']
+    symbols = ['BANKNIFTY22FEB38600PE','BANKNIFTY22FEB38600CE']
     buy_sell = ['sell','sell']
-    tradefile = '/home/narayana_tariq/Zerodha/Supertrend_strat/trades.ini'
+    tradefile = '/home/narayana_tariq/Zerodha/Supertrend/trades.ini'
     strike = 38600
     place_order(symbols,strike,buy_sell,tradefile)
